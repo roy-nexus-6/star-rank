@@ -20,11 +20,11 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             CelebritySeeder::class,
+            CommentSeeder::class,
+            TagSeeder::class,
             CelebrityRelationSeeder::class,
             CelebrityTagSeeder::class,
             CelebrityViewSeeder::class,
-            CommentSeeder::class,
-            TagSeeder::class,
         ]);
     }
 }
