@@ -12,7 +12,8 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @foreach ($celebrities as $celebrity)
         <div class="bg-white p-4 border rounded shadow">
-            <h2 class="text-xl font-bold mb-2">{{ $celebrity->name }}</h2>
+        <img class="w-20 h-20 object-cover mb-2" src="https://randomuser.me/api/portraits/men/{{ $celebrity->id }}.jpg" alt="User avatar">
+            <h2 class="text-lg text-indigo-500 font-medium title-font mb-2"><a href="{{ route('celebrity.show', $celebrity->id) }}">{{ $celebrity->name }}</a></h2>
             @if($celebrity->tags->isNotEmpty())
             <p class="text-gray-500 mb-2">
                 タグ:
@@ -21,7 +22,6 @@
                 @endforeach
             </p>
             @endif
-            <a href="{{ route('celebrity.show', $celebrity->id) }}" class="text-indigo-500 hover:underline">詳細を見る</a>
         </div>
         @endforeach
     </div>

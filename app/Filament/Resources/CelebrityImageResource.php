@@ -6,6 +6,7 @@ use App\Filament\Resources\CelebrityImageResource\Pages;
 use App\Filament\Resources\CelebrityImageResource\RelationManagers;
 use App\Models\CelebrityImage;
 use Filament\Forms;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Form;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -31,10 +32,11 @@ class CelebrityImageResource extends Resource
                     ->relationship('celebrity', 'name') // 芸能人を選択（リレーション）
                     ->required()
                     ->label('芸能人'),
-                TextInput::make('image_path')
+                FileUpload::make('image_path')
                     ->required()
-                    ->label('画像パス')
-                    ->placeholder('Google Drive の URL を入力してください'),
+                    ->multiple()
+                    ->label('画像アップロード')
+                    ->placeholder('画像をドラッグ&ドロップしてください'),
             ]);
     }
 
@@ -48,6 +50,11 @@ class CelebrityImageResource extends Resource
                     ->searchable(),
                 ImageColumn::make('image_path') // 画像プレビュー
                     ->label('画像')
+                    ->getStateUsing(function ($record) {
+                        $images = json_decode($record->image_path, true);
+                        return $images ? array_map(fn($image) => 'storage/uploads/' . $image, $images) : [];
+                    })
+                    ->multiple()
                     ->size(100), // サムネイルサイズを指定
             ])
             ->filters([

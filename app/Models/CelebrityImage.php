@@ -9,6 +9,10 @@ class CelebrityImage extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'image_path' => 'array',
+    ];
+
     protected $fillable = ['celebrity_id', 'image_path'];
 
     /**

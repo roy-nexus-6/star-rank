@@ -27,7 +27,7 @@ class CelebrityController extends Controller
 
     public function show($id)
     {
-        $celebrity = Celebrity::findOrFail($id);
+        $celebrity = Celebrity::with('tags')->findOrFail($id);
 
         // 今日の日付
         $today = now()->toDateString();
@@ -46,12 +46,20 @@ class CelebrityController extends Controller
         // コメント一覧を取得
         $comments = \App\Models\Comment::where('celebrity_id', $celebrity->id)->latest()->get();
 
-        return view('celebrity.show', compact('celebrity', 'images', 'comments'));
+        // タグ一覧を取得
+        $tags = $celebrity->tags;
+
+        return view('celebrity.show', compact('celebrity', 'images', 'comments', 'tags'));
     }
 
     public function vote(Request $request, $id)
     {
         $celebrity = Celebrity::findOrFail($id);
+
+        // セッションで投票済みか確認
+        if (session()->has("voted_celebrity_{$id}")) {
+            return redirect()->back()->with('error', 'すでに投票済みです。');
+        }
 
         $voteType = $request->input('type'); // 'like' or 'dislike'
 
@@ -61,9 +69,11 @@ class CelebrityController extends Controller
             $celebrity->increment('dislike_count');
         }
 
+        // 投票済みフラグをセッションに保存
+        session()->put("voted_celebrity_{$id}", true);
+
         return redirect()->back()->with('success', '投票ありがとうございました！');
     }
-
 
     public function trending($period)
     {
@@ -86,6 +96,4 @@ class CelebrityController extends Controller
 
         return view('trending', compact('celebrities', 'period'));
     }
-
-    
 }

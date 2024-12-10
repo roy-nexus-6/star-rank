@@ -10,6 +10,9 @@ class HomeController extends Controller
 {
     public function index()
     {
+        // 好感度No.1の人物を取得
+        $topCelebrity = Celebrity::orderBy('like_count', 'desc')->first();
+
         // 好感度ランキングを取得（like_countの降順で10件）
         $popularCelebrities = Celebrity::orderBy('like_count', 'desc')->take(10)->get();
 
@@ -52,6 +55,7 @@ class HomeController extends Controller
             ->get();
 
         return view('welcome', compact(
+            'topCelebrity',
             'popularCelebrities',
             'unpopularCelebrities',
             'trendingCelebrities',
