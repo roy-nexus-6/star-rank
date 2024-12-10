@@ -3,6 +3,12 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\Celebrity;
+use App\Models\CelebrityRelation;
+use App\Models\CelebrityTag;
+use App\Models\CelebrityView;
+use Illuminate\Cache\TagSet;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -12,11 +18,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        $this->call([
+            CelebritySeeder::class,
+            CelebrityRelationSeeder::class,
+            CelebrityTagSeeder::class,
+            CelebrityViewSeeder::class,
+            CommentSeeder::class,
+            TagSeeder::class,
+        ]);
     }
 }
