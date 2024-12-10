@@ -21,7 +21,7 @@
             @foreach ($celebrities as $index => $celebrityView)
             <li class="flex items-center py-4 px-6">
                 <span class="text-gray-700 text-lg font-medium mr-4">{{ $loop->iteration + ($celebrities->currentPage() - 1) * $celebrities->perPage() }}位</span>
-                <img class="w-20 h-20 object-cover rounded-full mr-4" src="https://randomuser.me/api/portraits/men/{{ $index + 10 }}.jpg" alt="{{ $celebrityView->celebrity->name }}">
+                <img class="w-20 h-20 object-cover mr-4" src="https://randomuser.me/api/portraits/men/{{ $celebrityView->celebrity_id }}.jpg" alt="{{ $celebrityView->celebrity->name }}">
                 <div class="flex-1 overflow-hidden">
                     <a href="{{ route('celebrity.show', $celebrityView->celebrity->id) }}">
                         <h3 class="text-lg font-medium text-indigo-500 truncate hover:text-indigo-600">{{ $celebrityView->celebrity->name }}</h3>

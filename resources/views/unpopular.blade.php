@@ -12,7 +12,7 @@
                 <span class="text-gray-700 text-lg font-medium mr-4">
                     {{ $loop->iteration + ($celebrities->currentPage() - 1) * $celebrities->perPage() }}位
                 </span>
-                <img class="w-20 h-20 object-cover rounded-full mr-4" src="https://randomuser.me/api/portraits/women/{{ $index + 10 }}.jpg" alt="{{ $celebrity->name }}">
+                <img class="w-20 h-20 object-cover mr-4" src="https://randomuser.me/api/portraits/men/{{ $celebrity->id }}.jpg" alt="{{ $celebrity->name }}">
                 <div class="flex-1 overflow-hidden">
                     <a href="{{ route('celebrity.show', $celebrity->id) }}">
                         <h3 class="text-lg font-medium text-indigo-500 truncate hover:text-indigo-600">{{ $celebrity->name }}</h3>
