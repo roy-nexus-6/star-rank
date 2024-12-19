@@ -12,7 +12,8 @@ class Comment extends Model
     protected $fillable = [
         'celebrity_id',
         'type',
-        'comment'
+        'comment',
+        'parent_id',
     ];
 
     public function celebrity()

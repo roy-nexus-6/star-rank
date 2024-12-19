@@ -5,19 +5,39 @@
 <section class="text-gray-600 body-font">
     <div class="container mx-auto flex px-5 py-24 md:flex-row flex-col items-center">
         <div class="lg:flex-grow md:w-1/2 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
-            <h1 class="title-font sm:text-4xl text-3xl mb-4 font-medium text-gray-900">今、一番輝いているのは誰？芸能人の人気ランキングをチェック！
+            <h1 class="title-font sm:text-4xl text-3xl mb-4 font-medium text-gray-900">みんなの人気投票コミュニティ
             </h1>
-            <p class="mb-8 leading-relaxed">今注目の芸能人やスターの人気度ランキングをリアルタイムでチェック！テレビ、映画、音楽、SNSで話題沸騰中のあの人の順位がわかる。あなたの応援でランキングが変わるかも！？</p>
-            <div class="flex justify-center">
-                <a href="#ranking-section" class="inline-flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">ランキングを見る</a>
-                <!-- <button class="ml-4 inline-flex text-gray-700 bg-gray-100 border-0 py-2 px-6 focus:outline-none hover:bg-gray-200 rounded text-lg">不人気度ランキング</button> -->
-            </div>
+            <p class="mb-8 leading-relaxed">あの有名人の評判って実際はどうなの？テレビ・CM・YouTube・インフルエンサーなど、よく見かける人気の人物について、「好き」「嫌い」を語り合うコミュニティサイト。</p>
         </div>
         <div class="lg:max-w-lg lg:w-full md:w-1/2 w-5/6">
             <img class="object-cover object-center rounded" alt="hero" src="{{ asset('images/hero.webp') }}">
         </div>
     </div>
 </section>
+
+<section>
+    <div class="m-6 p-4">
+        <div class="flex flex-wrap gap-3 justify-light">
+            <div class="flex items-center w-full">
+                <span class="flex-grow bg-gray-200 rounded h-0.5"></span>
+                <span class="text-2xl font-medium title-font text-gray-900">キーワードから探す</span>
+                <span class="flex-grow bg-gray-200 rounded h-0.5"></span>
+            </div>
+            <!-- 検索フォーム -->
+            <form action="{{ route('search') }}" method="GET" class="w-[70%] flex items-center mt-4 md:mt-0 mx-auto">
+                <input
+                    type="text"
+                    name="query"
+                    placeholder="検索"
+                    class="flex-grow px-3 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-200" />
+                <button type="submit" class="ml-2 inline-flex items-center text-white bg-black border-0 py-1 px-3 focus:outline-none hover:bg-indigo-600 rounded text-base">
+                    検索
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+
 
 <section>
     <div class="container px-5 py-24 mx-auto">
@@ -36,7 +56,6 @@
                             <a href="{{ route('celebrity.show', $popularCelebrity->id) }}">
                                 <h3 class="text-lg font-medium text-indigo-500 truncate hover:text-indigo-600">{{ $popularCelebrity->name }}</h3>
                             </a>
-                            <p class="text-gray-600 text-base truncate">{{ $popularCelebrity->like_count }} 人が好き</p>
                         </div>
                     </li>
                     @endforeach
@@ -60,7 +79,6 @@
                             <a href="{{ route('celebrity.show', $unpopularCelebrity->id) }}">
                                 <h3 class="text-lg font-medium text-indigo-500 truncate hover:text-indigo-600">{{ $unpopularCelebrity->name }}</h3>
                             </a>
-                            <p class="text-gray-600 text-base truncate">{{ $unpopularCelebrity->dislike_count }} 人が嫌い</p>
                         </div>
                     </li>
                     @endforeach
@@ -84,7 +102,6 @@
                             <a href="{{ route('celebrity.show', $celebrity->id) }}">
                                 <h3 class="text-lg font-medium text-indigo-500 truncate hover:text-indigo-600">{{ $celebrity->name }}</h3>
                             </a>
-                            <p class="text-gray-600 text-base truncate">{{ $celebrity->total_views }} 人が閲覧</p>
                         </div>
                     </li>
                     @endforeach

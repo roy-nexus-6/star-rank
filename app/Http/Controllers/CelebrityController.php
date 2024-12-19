@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Celebrity;
 use App\Models\CelebrityView;
 use App\Models\Comment;
+use Illuminate\Support\Facades\Log;
 
 use Illuminate\Http\Request;
 
@@ -27,6 +28,7 @@ class CelebrityController extends Controller
 
     public function show($id)
     {
+        // 芸能人データを取得
         $celebrity = Celebrity::with('tags')->findOrFail($id);
 
         // 今日の日付
@@ -37,20 +39,79 @@ class CelebrityController extends Controller
             ['celebrity_id' => $celebrity->id, 'view_date' => $today],
             ['view_count' => 0]
         );
-
         $view->increment('view_count');
 
-        // 関連する画像を取得（images リレーションを想定）
-        $images = $celebrity->images;
+        // Google APIを使用して画像検索
+        $googleImages = $this->getGoogleImages($celebrity->name);
 
         // コメント一覧を取得
-        $comments = \App\Models\Comment::where('celebrity_id', $celebrity->id)->latest()->get();
+        $comments = \App\Models\Comment::where('celebrity_id', $celebrity->id)
+            ->latest()
+            ->paginate(10);
 
         // タグ一覧を取得
         $tags = $celebrity->tags;
 
-        return view('celebrity.show', compact('celebrity', 'images', 'comments', 'tags'));
+        return view('celebrity.show', compact('celebrity', 'googleImages', 'comments', 'tags'));
     }
+
+    /**
+     * Google Custom Search API を使用して画像を取得
+     */
+    private function getGoogleImages($query)
+    {
+        $apiKey = env('GOOGLE_API_KEY');
+        $cx = env('GOOGLE_CX');
+
+        // 除外するドメインリスト
+        $excludedDomains = ['instagram.com', 'twitter.com', 'facebook.com', 'threads.net'];
+
+        try {
+            $client = new \GuzzleHttp\Client();
+            $response = $client->get('https://www.googleapis.com/customsearch/v1', [
+                'query' => [
+                    'key' => $apiKey,
+                    'cx' => $cx,
+                    'q' => $query . ' 本人写真',
+                    'searchType' => 'image',
+                    'safe' => 'off',               // セーフサーチ無効
+                    'imgType' => 'face',           // 顔画像を優先
+                    'num' => 5,                    // 結果数
+                    'gl' => 'jp',                  // 日本の地域優先
+                    'hl' => 'ja',   
+                ]
+            ]);
+
+            $data = json_decode($response->getBody(), true);
+
+            $images = [];
+            if (isset($data['items'])) {
+                foreach ($data['items'] as $item) {
+                    $url = $item['link'];
+
+                    // 除外リストに含まれるドメインをチェック
+                    $isExcluded = false;
+                    foreach ($excludedDomains as $domain) {
+                        if (strpos($url, $domain) !== false) {
+                            $isExcluded = true;
+                            break;
+                        }
+                    }
+
+                    if (!$isExcluded) {
+                        $images[] = $url;
+                    }
+                }
+            }
+
+            return $images;
+        } catch (\Exception $e) {
+            Log::error("Google Custom Search API エラー: " . $e->getMessage());
+            return [];
+        }
+    }
+
+
 
     public function vote(Request $request, $id)
     {
